@@ -147,19 +147,19 @@ def buildHTML(path, imgfile, imgfilepath):
         f.write("<div id=\"PV\">\n")
         if not noHorizontalPV and not noVerticalPV:
             if rotatedPage:
-                if options.righttoleft:
+                if options.readrighttoleft:
                     order = [1, 3, 2, 4]
                 else:
                     order = [2, 4, 1, 3]
             else:
-                if options.righttoleft:
+                if options.readrighttoleft:
                     order = [2, 1, 4, 3]
                 else:
                     order = [1, 2, 3, 4]
             boxes = ["PV-TL", "PV-TR", "PV-BL", "PV-BR"]
         elif noHorizontalPV and not noVerticalPV:
             if rotatedPage:
-                if options.righttoleft:
+                if options.readrighttoleft:
                     order = [1, 2]
                 else:
                     order = [2, 1]
@@ -170,7 +170,7 @@ def buildHTML(path, imgfile, imgfilepath):
             if rotatedPage:
                 order = [1, 2]
             else:
-                if options.righttoleft:
+                if options.readrighttoleft:
                     order = [2, 1]
                 else:
                     order = [1, 2]
@@ -266,7 +266,7 @@ def buildNAV(dstdir, title, chapters, chapternames):
 def buildOPF(dstdir, title, filelist, cover=None):
     opffile = os.path.join(dstdir, 'OEBPS', 'content.opf')
     deviceres = options.profileData[1]
-    if options.righttoleft:
+    if options.navrighttoleft:
         writingmode = "horizontal-rl"
     else:
         writingmode = "horizontal-lr"
@@ -334,7 +334,7 @@ def buildOPF(dstdir, title, filelist, cover=None):
         f.write("<item id=\"img_" + str(uniqueid) + "\" href=\"" + folder + "/" + path[1] + "\" media-type=\"" +
                 mt + "\"/>\n")
     f.write("<item id=\"css\" href=\"Text/style.css\" media-type=\"text/css\"/>\n")
-    if options.righttoleft:
+    if options.navrighttoleft:
         f.write("</manifest>\n<spine page-progression-direction=\"rtl\" toc=\"ncx\">\n")
         pageside = "right"
     else:
@@ -911,12 +911,14 @@ def makeParser():
     mainOptions.add_option("-p", "--profile", action="store", dest="profile", default="KV",
                            help="Device profile (Available options: K1, K2, K34, K578, KDX, KPW, KV, KO, KoMT, KoG,"
                                 " KoGHD, KoA, KoAHD, KoAH2O, KoAO, KoF) [Default=KV]")
-    mainOptions.add_option("-m", "--manga-style", action="store_true", dest="righttoleft", default=False,
-                           help="Manga style (right-to-left reading and splitting)")
     mainOptions.add_option("-q", "--hq", action="store_true", dest="hq", default=False,
                            help="Try to increase the quality of magnification")
     mainOptions.add_option("-2", "--two-panel", action="store_true", dest="autoscale", default=False,
                            help="Display two not four panels in Panel View mode")
+    mainOptions.add_option("-m", "--manga-style", action="store_true", dest="readrighttoleft", default=False,
+                           help="Right-to-left page splitting")
+    mainOptions.add_option("--right-to-left-nav", action="store_true", dest="navrighttoleft", default=False,
+                           help="Right-to-left navigation")
     mainOptions.add_option("-w", "--webtoon", action="store_true", dest="webtoon", default=False,
                            help="Webtoon processing mode"),
 
@@ -996,7 +998,8 @@ def checkOptions():
     # Webtoon mode mandatory options
     if options.webtoon:
         options.panelview = False
-        options.righttoleft = False
+        options.navrighttoleft = False
+        options.readrighttoleft = False
         options.upscale = True
         options.hq = False
     # Disable all Kindle features for other e-readers

@@ -131,7 +131,7 @@ class ComicPageParser:
                 else:
                     leftbox = (0, 0, width, int(height / 2))
                     rightbox = (0, int(height / 2), width, height)
-                if self.opt.righttoleft:
+                if self.opt.readrighttoleft:
                     pageone = self.image.crop(rightbox)
                     pagetwo = self.image.crop(leftbox)
                 else:
